@@ -60,6 +60,7 @@ graph TD;
 
 
 ![Screenshot 2024-09-30 175656](https://github.com/user-attachments/assets/fc8ce360-90c3-472c-b7c7-276b9085e9d9)
+![Screenshot 2024-09-30 175247](https://github.com/user-attachments/assets/018534a9-5fc8-44a3-90ec-d2dd0ca0d19b)
 ![Screenshot 2024-09-30 175227](https://github.com/user-attachments/assets/c215eb9c-529a-4c81-828c-20486772f423)
 ![Screenshot 2024-09-30 175205](https://github.com/user-attachments/assets/8cf94156-2bd5-457d-8ac1-84a64694ad4a)
 ![Screenshot 2024-09-30 174802](https://github.com/user-attachments/assets/e12a0284-2133-4940-86fc-29594aa16f20)
@@ -87,7 +88,5 @@ GROQ_API_KEY = "<your_groq_api_key>"
 ```
 
 ---
-
-
 
 
