@@ -2,8 +2,10 @@
 # Mutual Fund Advisory Chatbot Application
 
 **Developer**: Nishkka Upadhyaya  
-**Deployment**: [Streamlit](https://aibf-mutual-fund-rag-llm.streamlit.app/?embed_options=dark_theme)  <br>
-**GitHub Repository**: [Link to Repository](https://github.com/amitesh30/AIBF-MUTUAL-FUND-RAG-LLM/)
+**Deployment**: ChatGPT said:
+
+The app won’t deploy on Streamlit because Streamlit Cloud forces Python 3.13, which is incompatible with the mftool package. <br>
+
 
 ## Objective
 An interactive chatbot providing mutual fund advice with real-time data, personalized responses, and visualizations.
