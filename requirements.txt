@@ -1,0 +1,14 @@
+streamlit
+mftool
+langchain
+langchain-pinecone 
+pinecone-notebooks
+langchain-groq
+langchain-mongodb
+langchain-community
+plotly
+pymongo
+joblib
+nest_asyncio
+sentence-transformers
+groq
