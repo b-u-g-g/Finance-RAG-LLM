@@ -2,9 +2,7 @@
 # Mutual Fund Advisory Chatbot Application
 
 **Developer**: Nishkka Upadhyaya  
-**Deployment**: ChatGPT said:
-
-The app won’t deploy on Streamlit because Streamlit Cloud forces Python 3.13, which is incompatible with the mftool package. <br>
+**Deployment**: The app won’t deploy on Streamlit because Streamlit Cloud forces Python 3.13, which is incompatible with the mftool package. <br>
 
 
 ## Objective
