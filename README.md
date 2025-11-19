@@ -4,6 +4,7 @@
 **Developer**: Nishkka Upadhyaya  
 **Deployment**: The app won’t deploy on Streamlit because Streamlit Cloud forces Python 3.13, which is incompatible with the mftool package. <br>
 
+**Supporting Docs**: https://tinyurl.com/docs-llmrag
 
 ## Objective
 An interactive chatbot providing mutual fund advice with real-time data, personalized responses, and visualizations.
