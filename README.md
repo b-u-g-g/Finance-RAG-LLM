@@ -58,7 +58,7 @@ graph TD;
 
 
 ![Screenshot 2024-09-30 175656](https://github.com/user-attachments/assets/fc8ce360-90c3-472c-b7c7-276b9085e9d9)
-![Screenshot 2024-09-30 175247](https://github.com/user-attachments/assets/018534a9-5fc8-44a3-90ec-d2dd0ca0d19b)
+
 ![Screenshot 2024-09-30 174802](https://github.com/user-attachments/assets/e12a0284-2133-4940-86fc-29594aa16f20)
 ![Screenshot 2024-09-30 174750](https://github.com/user-attachments/assets/528444d4-d987-4db7-b80d-4f29bc8795f4)
 
