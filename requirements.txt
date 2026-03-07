@@ -1,5 +1,5 @@
 streamlit
-mftool
+requests
 langchain
 langchain-pinecone 
 pinecone-notebooks

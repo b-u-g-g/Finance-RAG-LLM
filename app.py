@@ -1,17 +1,42 @@
 import streamlit as st
-from mftool import Mftool
+import requests
 import pandas as pd
 import time
 import plotly.express as px
-import streamlit as st
-
 
 PINECONE_API_KEY =  st.secrets['PINECONE_API']
 connection_string1 = st.secrets["MONGODB_CONNECTION_STRING"]
 GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 
-# Initialize the Mftool object
-mf = Mftool()
+# MFAPI helpers (replaces mftool)
+_MFAPI = "https://api.mfapi.in/mf"
+
+def get_available_schemes(amc_name):
+    r = requests.get(f"{_MFAPI}/search", params={"q": amc_name}, timeout=10)
+    r.raise_for_status()
+    return {str(item["schemeCode"]): item["schemeName"] for item in r.json()}
+
+def get_scheme_quote(scheme_code):
+    r = requests.get(f"{_MFAPI}/{scheme_code}/latest", timeout=10)
+    r.raise_for_status()
+    resp = r.json()
+    meta = resp.get("meta", {})
+    data = resp.get("data", [{}])
+    return {"scheme_code": str(scheme_code), "scheme_name": meta.get("scheme_name", ""),
+            "nav": data[0].get("nav", "") if data else "", **meta}
+
+def get_scheme_details(scheme_code):
+    r = requests.get(f"{_MFAPI}/{scheme_code}", timeout=10)
+    r.raise_for_status()
+    meta = r.json().get("meta", {})
+    return {"scheme_code": str(scheme_code), "scheme_name": meta.get("scheme_name", ""),
+            "fund_house": meta.get("fund_house", ""), "scheme_type": meta.get("scheme_type", ""),
+            "scheme_category": meta.get("scheme_category", ""), **meta}
+
+def get_scheme_historical_nav(scheme_code):
+    r = requests.get(f"{_MFAPI}/{scheme_code}", timeout=10)
+    r.raise_for_status()
+    return r.json()
 # Custom CSS to style the app with a modern blue theme
 
 # Create tabs
@@ -128,7 +153,7 @@ with tabs[1]:
         if st.button("Get Schemes"):
             try:
                 progress = progress_placeholder.progress(0)  # Show progress bar
-                schemes = mf.get_available_schemes(amc_name)
+                schemes = get_available_schemes(amc_name)
                 if schemes:
                     # Filter based on user selection
                     if filter_choice == "Show only Equity Schemes":
@@ -171,7 +196,7 @@ with tabs[1]:
 
         if st.button("Get Scheme Quote"):
             try:
-                quote = mf.get_scheme_quote(scheme_code)
+                quote = get_scheme_quote(scheme_code)
                 if quote:
                     st.write(f"Quote for Scheme {scheme_code}:")
                     if view_type == "Basic Info":
@@ -196,7 +221,7 @@ with tabs[1]:
         
         if st.button("Get Scheme Details"):
             try:
-                scheme_details = mf.get_scheme_details(scheme_code)
+                scheme_details = get_scheme_details(scheme_code)
                 if scheme_details:
                     st.write(f"Details for Scheme {scheme_code}:")
                     if detail_level == "Basic":
@@ -224,7 +249,7 @@ with tabs[1]:
         if st.button("Get Historical NAV"):  # Only execute the following after the button is pressed
             try:
                 # Fetch scheme details first
-                scheme_details = mf.get_scheme_details(scheme_code)
+                scheme_details = get_scheme_details(scheme_code)
                 
                 if scheme_details:
                     st.write(f"Details for Scheme Code {scheme_code}:")
@@ -239,7 +264,7 @@ with tabs[1]:
                     st.error("No scheme details found for this scheme code.")
                 
                 # Fetch historical NAV data
-                historical_nav = mf.get_scheme_historical_nav(scheme_code)
+                historical_nav = get_scheme_historical_nav(scheme_code)
                 
                 # Extracting date and nav data into a DataFrame
                 data = historical_nav['data']
