@@ -1,11 +1,12 @@
 streamlit
 requests
 langchain
-langchain-pinecone 
-pinecone-notebooks
+langchain-core
+langchain-pinecone
 langchain-groq
 langchain-mongodb
 langchain-community
+pinecone
 plotly
 pymongo
 joblib
