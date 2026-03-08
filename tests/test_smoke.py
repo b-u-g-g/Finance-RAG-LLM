@@ -30,12 +30,11 @@ def test_langchain_core_importable():
     assert ChatPromptTemplate is not None
 
 
-def test_langchain_chains_importable():
-    from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-    from langchain.chains.combine_documents import create_stuff_documents_chain
-    assert create_history_aware_retriever is not None
-    assert create_retrieval_chain is not None
-    assert create_stuff_documents_chain is not None
+def test_langchain_core_runnables_importable():
+    from langchain_core.output_parsers import StrOutputParser
+    from langchain_core.runnables import RunnablePassthrough
+    assert StrOutputParser is not None
+    assert RunnablePassthrough is not None
 
 
 def test_langchain_community_importable():

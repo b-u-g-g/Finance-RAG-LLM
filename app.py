@@ -333,9 +333,9 @@ with tabs[2]:
     from dotenv import load_dotenv
     from pymongo import MongoClient, ASCENDING
     from datetime import datetime
-    from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
-    from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-    from langchain.chains.combine_documents import create_stuff_documents_chain
+    from langchain_core.prompts import PromptTemplate
+    from langchain_core.output_parsers import StrOutputParser
+    from langchain_core.runnables import RunnablePassthrough
     from langchain_community.chat_message_histories import MongoDBChatMessageHistory
     from langchain_core.messages import AIMessage, HumanMessage
     from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -481,33 +481,19 @@ with tabs[2]:
     chat_model = ChatGroq(temperature=0.2, model_name="llama-3.3-70b-versatile", api_key=GROQ_API_KEY)
 
 
-    def get_context_retriever_chain(vector_store):
-        llm = ChatGroq(model="llama-3.3-70b-versatile", api_key=GROQ_API_KEY)
-        # llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
-        retriever = vector_store.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={"k": 2, "score_threshold": 0.6},
-        )
-        prompt = ChatPromptTemplate.from_messages([
-            MessagesPlaceholder(variable_name="chat_history"),
-            ("user","{input}"),
-            ("user","Given the above conversation, generate a search query to look up in order to get information relevant to the conversation")
-        ])
-        retriever_chain = create_history_aware_retriever(llm, retriever, prompt)
-        return retriever_chain
+    def _format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
 
-    # Define the QA chain using the ChatGroq model and retriever
-    combine_docs_chain = create_stuff_documents_chain(chat_model, PROMPT)
-    qa = create_retrieval_chain(retriever, combine_docs_chain)
+    # Pure LCEL chain: retrieve → format → prompt → LLM → parse
+    qa = (
+        {"context": retriever | _format_docs, "input": RunnablePassthrough()}
+        | PROMPT
+        | chat_model
+        | StrOutputParser()
+    )
 
-    # Function to get chatbot response
     def get_response(user_input):
-        response = qa.invoke({"input": user_input})
-
-        # Extract the helpful answer
-        ai_response = response["answer"]
-
-        return ai_response
+        return qa.invoke(user_input)
 
     # Streamlit UI setup
     st.title("AIBF Chatbot")
@@ -535,16 +521,10 @@ with tabs[2]:
     if "vector_store" not in st.session_state:
         st.session_state.vector_store = vector_store
 
-    retriever_chain = get_context_retriever_chain(vector_store)
-
     if user_input:
         response = get_response(user_input)
         st.session_state.chat_history.append(HumanMessage(content=user_input))
         st.session_state.chat_history.append(AIMessage(content=response))
-        retrieved_documents = retriever_chain.invoke({
-            "chat_history": st.session_state.chat_history,
-            "input": user_input
-        })
 
     # conversation
     for index, message in enumerate(st.session_state.chat_history):
