@@ -333,34 +333,21 @@ with tabs[2]:
     from dotenv import load_dotenv
     from pymongo import MongoClient, ASCENDING
     from datetime import datetime
-    from langchain.prompts import PromptTemplate
-    from langchain.chains import RetrievalQA
-    #from langchain_mongodb.chat_message_histories import MongoDBChatMessageHistory
+    from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
+    from langchain.chains import RetrievalQA, create_history_aware_retriever, create_retrieval_chain
     from langchain_community.chat_message_histories import MongoDBChatMessageHistory
     from langchain_core.messages import AIMessage, HumanMessage
     from langchain_community.embeddings import HuggingFaceEmbeddings
     from langchain_pinecone import PineconeVectorStore
     from langchain_groq import ChatGroq
-    from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
     from pinecone import Pinecone, ServerlessSpec
-    from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_community.vectorstores import Chroma
-    from langchain_community.document_loaders import DirectoryLoader
-    from langchain_community.document_loaders import UnstructuredMarkdownLoader
-   # from langchain.prompts import PromptTemplate
-    from langchain.chains import RetrievalQA
+    from langchain_community.document_loaders import DirectoryLoader, UnstructuredMarkdownLoader
     from groq import Groq
     import joblib
-    import os
     import nest_asyncio  # noqa: E402
     nest_asyncio.apply()
-    from dotenv import load_dotenv
-    from langchain.embeddings import HuggingFaceEmbeddings
-    from langchain.document_loaders import PyMuPDFLoader, DirectoryLoader, PyPDFLoader
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
-    #from langchain.prompts import PromptTemplate
-    from langchain.llms import CTransformers
     
 
 

@@ -2,11 +2,13 @@ streamlit
 requests
 langchain
 langchain-core
+langchain-text-splitters
 langchain-pinecone
 langchain-groq
 langchain-mongodb
 langchain-community
 pinecone
+python-dotenv
 plotly
 pymongo
 joblib
