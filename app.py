@@ -334,7 +334,8 @@ with tabs[2]:
     from pymongo import MongoClient, ASCENDING
     from datetime import datetime
     from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
-    from langchain.chains import RetrievalQA, create_history_aware_retriever, create_retrieval_chain
+    from langchain.chains import create_history_aware_retriever, create_retrieval_chain
+    from langchain.chains.combine_documents import create_stuff_documents_chain
     from langchain_community.chat_message_histories import MongoDBChatMessageHistory
     from langchain_core.messages import AIMessage, HumanMessage
     from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -469,13 +470,12 @@ with tabs[2]:
     Use the following pieces of information to answer the user's question.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     Context: {context}
-    Question: {question}
+    Question: {input}
 
     Only return the helpful answer below and nothing else.
     Helpful answer:
     """
-    PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-    chain_type_kwargs = {"prompt": PROMPT}
+    PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "input"])
 
     # Set up ChatGroq model
     chat_model = ChatGroq(temperature=0.2, model_name="llama-3.3-70b-versatile", api_key=GROQ_API_KEY)
@@ -497,21 +497,15 @@ with tabs[2]:
         return retriever_chain
 
     # Define the QA chain using the ChatGroq model and retriever
-    qa = RetrievalQA.from_chain_type(
-        llm=chat_model,
-        chain_type="stuff",
-        retriever=retriever,
-        return_source_documents=True,
-        chain_type_kwargs=chain_type_kwargs
-    )
+    combine_docs_chain = create_stuff_documents_chain(chat_model, PROMPT)
+    qa = create_retrieval_chain(retriever, combine_docs_chain)
 
-    # Function to get chatbot response using RetrievalQA
+    # Function to get chatbot response
     def get_response(user_input):
-        # Query the RetrievalQA model
-        response = qa.invoke({"query": user_input})
+        response = qa.invoke({"input": user_input})
 
         # Extract the helpful answer
-        ai_response = response["result"]
+        ai_response = response["answer"]
 
         return ai_response
 
