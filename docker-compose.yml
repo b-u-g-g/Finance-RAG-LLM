@@ -1,0 +1,21 @@
+version: '3.8'
+
+# Run locally:  docker compose up --build
+# Requires:     .streamlit/secrets.toml  (copy from .streamlit/secrets.toml.example)
+
+services:
+  finance-rag-app:
+    build: .
+    container_name: finance-rag-llm
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount secrets at runtime — never bake credentials into the image
+      - ./.streamlit/secrets.toml:/app/.streamlit/secrets.toml:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
