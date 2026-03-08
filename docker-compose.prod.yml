@@ -1,0 +1,24 @@
+version: '3.8'
+
+# Production compose file for EC2 — pulls pre-built image from Docker Hub.
+# Run on the EC2 instance:
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Requires ~/.streamlit/secrets.toml to exist on the host with real API keys.
+
+services:
+  finance-rag-app:
+    image: ${DOCKERHUB_USERNAME}/finance-rag-llm:latest
+    container_name: finance-rag-llm
+    ports:
+      - "8501:8501"
+    volumes:
+      - ~/.streamlit/secrets.toml:/app/.streamlit/secrets.toml:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
